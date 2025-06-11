@@ -69,7 +69,7 @@ public class BasicOp extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
+    private DcMotor leftFrontDrive = null;1
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
@@ -172,3 +172,4 @@ public class BasicOp extends LinearOpMode {
 //#pissing
 //plspls woh testing
 //jhuigihkgih
+//lala
