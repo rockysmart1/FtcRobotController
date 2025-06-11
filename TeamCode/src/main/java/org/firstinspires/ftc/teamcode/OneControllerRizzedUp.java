@@ -4,30 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
+
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 @TeleOp(name = "OneControllerRizzedUp")
 public class OneControllerRizzedUp extends LinearOpMode {
 
-    private Servo armservo;
-    private DcMotor ArmMotor;
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor leftRear;
-    private DcMotor rightRear;
-
-    double ticks = 1680;
-    double newTarget;
-
     public boolean clawOpen = true;
     public boolean clawPressed = false;
 
-
-
-    /**
-     * This function is executed when this Op Mode is selected from the Driver Station.
-     */
     @Override
     public void runOpMode() {
         double speedE;
@@ -39,34 +24,29 @@ public class OneControllerRizzedUp extends LinearOpMode {
         double arm_power;
 
 
-
-
-        armservo = hardwareMap.get(Servo.class, "arm servo!");
-        ArmMotor = hardwareMap.get(DcMotor.class, "Arm Motor");
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        Servo servo = hardwareMap.get(Servo.class, "arm servo!");
+        DcMotor armMotor = hardwareMap.get(DcMotor.class, "Arm Motor");
+        DcMotor leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        DcMotor leftRear = hardwareMap.get(DcMotor.class, "leftRear");
+        DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         // Put initialization blocks here.
         waitForStart();
         // 0.2 before 0.1 to try make open wider
-        armservo.setPosition(0.1);
+        servo.setPosition(0.1);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                // Put loop blocks here.
-                // if (gamepad1.left_bumper)
-                // {
-                //   encoder(2);
-                // }
 
                 //set speed
-                if (gamepad1.right_bumper) {
-                    armPowerVariable = 0.3;
+                if (gamepad1.right_bumper)
+                {
+                    armPowerVariable = 0.15;
                     speedE = 0.25;
                 }
-                else {
+                else
+                {
                     speedE = 1;
                     armPowerVariable = 2;
                 }
@@ -74,34 +54,38 @@ public class OneControllerRizzedUp extends LinearOpMode {
 
 
                 //servo
-                if ((gamepad1.a && !clawPressed)) {
+                if ((gamepad1.a && !clawPressed))
+                {
+                    telemetry.addData("a pressed:", true);
                     clawOpen = !clawOpen;
                     if (clawOpen)
                     {
-                        armservo.setPosition(0.35);
+                        servo.setPosition(0.35);
                     }
-                    else{
-                        armservo.setPosition(0.25);
+                    else
+                    {
+                        servo.setPosition(0.25);
                     }
 
                 }
                 clawPressed = gamepad1.a;
-                telemetry.addData("servoPos", armservo.getPosition());
-                telemetry.update();
                 // arm movement
 
-                if(gamepad1.dpad_up){
-                    arm_power = 0.5 * armPowerVariable;
+                if(gamepad1.dpad_up)
+                {
+                    arm_power = 0.4 * armPowerVariable;
                 }
-                else if (gamepad1.dpad_down){
+                else if (gamepad1.dpad_down)
+                {
                     arm_power = -0.25 * armPowerVariable;
                 }
-                else{
+                else
+                {
                     arm_power = 0;
                 }
 
-                ArmMotor.setPower(arm_power);
-                telemetry.addData("armPos", ArmMotor.getCurrentPosition());
+                armMotor.setPower(arm_power);
+                telemetry.addData("armPosition:", armMotor.getCurrentPosition());
                 telemetry.update();
 
                 // movement
@@ -110,7 +94,7 @@ public class OneControllerRizzedUp extends LinearOpMode {
                 strafe = -(gamepad1.right_stick_x * speedE);
                 turn = gamepad1.right_stick_x * speedE;
                 denominator = JavaUtil.maxOfList(JavaUtil.createListWith(1, Math.abs(forward) + Math.abs(strafe) + Math.abs(turn)));
-                telemetry.addData("forward power", forward);
+                telemetry.addData("forwardPower:", forward);
                 //movement
                 leftFront.setPower((forward - (strafe + turn)) / denominator);
                 rightFront.setPower((forward - (strafe - turn)) / denominator);
